@@ -6,12 +6,34 @@ import  httpStatus  from "http-status";
 const loginUser = catchAsync(async(req:Request, res:Response, next:NextFunction)=>{
     const payload = req.body
 
-    const loginResult = await authService.loginUser(payload)
+    const {acesstoken, refreshToken} = await authService.loginUser(payload)
+   
+    res.cookie("accessToken", acesstoken, {
+         httpOnly: true,
+         secure: false,
+         sameSite: "none",
+         maxAge: 1000 * 60 * 60  * 24 // 24 hour 1 day
+    })
+   res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+         secure: false,
+         sameSite: "none",
+         maxAge: 1000 * 60 * 60  * 24 * 7 // 7 days
+   })
+
+   
+
+
+
+
     sendResponse(res,{
         success : true,
         statusCode: httpStatus.OK,
         message: "user is login successfull",
-        data : loginResult
+        data : {
+             acesstoken,
+             refreshToken
+        }
     })
 })
 
