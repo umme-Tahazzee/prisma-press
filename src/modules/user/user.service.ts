@@ -61,6 +61,11 @@ const registerUserIntoDb = async(payload: RegisterInterfacePayload) => {
     return user
 }
 
+const getProfileFromDb = async()=>{
+
+}
+
 export const useService={
-    registerUserIntoDb
+    registerUserIntoDb,
+    getProfileFromDb
 }
