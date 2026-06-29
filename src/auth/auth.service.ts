@@ -7,6 +7,8 @@ import { jwtUtils } from "../utils/jwt.js";
 
 const loginUser = async (payload: IloginUser) => {
   const { email, password } = payload;
+  
+  
   const user = await prisma.user.findUniqueOrThrow({
     where: { email },
   });
@@ -25,13 +27,15 @@ const loginUser = async (payload: IloginUser) => {
 
 
   const acesstoken = jwtUtils.createToken(
-    payload,
+    jwtPayload,
     config.jwt_access_secret,
     config.jwt_access_expires_in as SignOptions
   )
+  
+  
 
   const refreshToken = jwtUtils.createToken(
-    payload,
+     jwtPayload,
     config.jwt_refresh_secret,
     config.jwt_refresh_expires_in as SignOptions
   )

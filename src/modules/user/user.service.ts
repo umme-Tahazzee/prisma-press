@@ -2,6 +2,7 @@ import { prisma } from "../../lib/prisma.js"
 import bcrypt from "bcryptjs";
 import config from "../../config/index.js";
 import type {RegisterInterfacePayload} from '../user/user.interface.js'
+import { JwtPayload } from "jsonwebtoken";
 
 
 
@@ -61,8 +62,15 @@ const registerUserIntoDb = async(payload: RegisterInterfacePayload) => {
     return user
 }
 
-const getProfileFromDb = async()=>{
+const getProfileFromDb = async(userId: string )=>{
+   const userProfile = await prisma.user.findUniqueOrThrow({
+     where : { id : userId},
+     omit : {password : true},
+     include: {
+         profile: true
+     }  }) 
 
+     return userProfile;
 }
 
 export const useService={
