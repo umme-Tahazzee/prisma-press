@@ -7,7 +7,7 @@ import httpStatus, {
 import { useService } from "./user.service.js";
 import { catchAsync } from "../../utils/catchAsync.js";
 import { sendResponse } from "../../utils/sendResponse.js";
-import jwt from 'jsonwebtoken'
+
 import config from "../../config/index.js";
 import { jwtUtils } from "../../utils/jwt.js";
 
@@ -28,10 +28,9 @@ const registerUser = catchAsync(async (req: Request, res: Response) => {
 
 const getMyProfile = catchAsync(async (req: Request, res: Response) => {
 
-  // const userProfile = await useService.getProfileFromDb()
-  const { accessToken } = req.cookies
-  const verifyToken = jwtUtils.verifyToken(accessToken, config.jwt_access_secret)
-  const profile = await useService.getProfileFromDb(verifyToken.id as string)
+
+  //  console.log(req.user, 'check user');
+  const profile = await useService.getProfileFromDb(req.user?.id as string)
    sendResponse(res,{
      success : true,
      statusCode : httpStatus.OK,
