@@ -30,9 +30,7 @@ const getMyProfile = catchAsync(async (req: Request, res: Response) => {
 
   // const userProfile = await useService.getProfileFromDb()
   const { accessToken } = req.cookies
-
   const verifyToken = jwtUtils.verifyToken(accessToken, config.jwt_access_secret)
-  
   const profile = await useService.getProfileFromDb(verifyToken.id as string)
    sendResponse(res,{
      success : true,
