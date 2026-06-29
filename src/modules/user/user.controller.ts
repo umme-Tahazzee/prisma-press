@@ -8,10 +8,6 @@ import { useService } from "./user.service.js";
 import { catchAsync } from "../../utils/catchAsync.js";
 import { sendResponse } from "../../utils/sendResponse.js";
 
-import config from "../../config/index.js";
-import { jwtUtils } from "../../utils/jwt.js";
-
-
 const registerUser = catchAsync(async (req: Request, res: Response) => {
   const payload = req.body;
   const user = await useService.registerUserIntoDb(payload);
@@ -30,6 +26,8 @@ const getMyProfile = catchAsync(async (req: Request, res: Response) => {
 
 
   //  console.log(req.user, 'check user');
+  
+
   const profile = await useService.getProfileFromDb(req.user?.id as string)
    sendResponse(res,{
      success : true,
