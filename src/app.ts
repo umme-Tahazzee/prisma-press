@@ -30,6 +30,6 @@ app.use('/api/auth', authRoutes)
 
 //posts 
 
-app.post('api/posts',postRoutes)
+app.use('/api/posts',postRoutes)
 
 export default app;

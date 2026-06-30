@@ -1,12 +1,23 @@
 import { NextFunction, Request, Response } from "express";
-import { catchAsync } from "../../utils/catchAsync.js";
-import { prisma } from "../../lib/prisma.js";
-import { postService } from "./post.service.js";
+import { catchAsync } from "../../utils/catchAsync";
+import { postService } from "./post.service";
+import { sendResponse } from "../../utils/sendResponse";
+import  httpStatus  from "http-status";
 
-const createPost = catchAsync(async(req:Request, res:Response, next:NextFunction)=>{
+const createPost = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
 
-const post = await postService.createPostFromDb()
-   
+
+    const id = req.user?.id
+    const payload = req.body
+    const result = await postService.createPostFromDb(payload, id as string)
+
+    sendResponse(res, {
+         success : true,
+         statusCode : httpStatus.OK,
+         message : "Post successfully created",
+         data : result
+    })
+
 
 })
 
