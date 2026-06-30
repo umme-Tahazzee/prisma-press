@@ -16,6 +16,6 @@ enum PostStatus {
 }
 
 enum CommentStatus {
-     APPROVED
-     REJECT
+  APPROVED
+  REJECT
 }
