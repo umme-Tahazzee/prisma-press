@@ -1,13 +1,7 @@
-import { NextFunction, Request, Response, Router } from "express";
+import { Router } from "express";
 import { userController } from "./user.controller.js";
-import { jwtUtils } from "../../utils/jwt.js";
-import config from "../../config/index.js";
-import { UserRole } from "../../../generated/prisma/enums.js";
-import HttpStatus from "http-status";
-import { catchAsync } from "../../utils/catchAsync.js";
-import { JwtPayload } from "jsonwebtoken";
-import { prisma } from "../../lib/prisma.js";
-import { auth } from "../../middleware/auth.js";
+import { auth } from "../../middleware/auth";
+import { UserRole } from "../../../prisma/generated/prisma/enums";
 
 const router = Router();
 

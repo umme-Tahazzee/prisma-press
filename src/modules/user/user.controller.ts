@@ -4,9 +4,9 @@ import httpStatus, {
   INTERNAL_SERVER_ERROR,
   StatusCodes,
 } from "http-status-codes";
-import { useService } from "./user.service.js";
-import { catchAsync } from "../../utils/catchAsync.js";
-import { sendResponse } from "../../utils/sendResponse.js";
+import { useService } from "./user.service";
+import { catchAsync } from "../../utils/catchAsync";
+import { sendResponse } from "../../utils/sendResponse";
 
 const registerUser = catchAsync(async (req: Request, res: Response) => {
   const payload = req.body;
