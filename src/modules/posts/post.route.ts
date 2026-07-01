@@ -11,6 +11,6 @@ router.post("/", auth(UserRole.ADMIN, UserRole.USER, UserRole.AUTHOR),
 router.get('/', auth(UserRole.ADMIN, UserRole.USER, UserRole.AUTHOR), postController.getAllPost)
 router.get('/my-posts', auth(UserRole.ADMIN, UserRole.USER, UserRole.AUTHOR), postController.getMyPosts)
 router.get('/:postId', postController.getPostById)
-
+router.patch('/:postId',auth(UserRole.ADMIN, UserRole.USER, UserRole.AUTHOR), postController.updatePost)
 
 export const postRoutes = router

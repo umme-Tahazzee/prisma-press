@@ -3,6 +3,7 @@ import { catchAsync } from "../../utils/catchAsync";
 import { postService } from "./post.service";
 import { sendResponse } from "../../utils/sendResponse";
 import httpStatus from "http-status";
+import { prisma } from "../../lib/prisma";
 
 const createPost = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const id = req.user?.id
@@ -28,7 +29,6 @@ const getAllPost = catchAsync(async (req: Request, res: Response, next: NextFunc
     })
 })
 
-
 const getPostById = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const postId = req.params.postId
 
@@ -49,7 +49,6 @@ const getPostById = catchAsync(async (req: Request, res: Response, next: NextFun
 
 })
 
-
 const getMyPosts = catchAsync(async(req: Request, res: Response, next: NextFunction)=>{
       const authorId = req.user?.id 
       const result = await postService.getMyPostsFromDb(authorId as string)
@@ -62,9 +61,30 @@ const getMyPosts = catchAsync(async(req: Request, res: Response, next: NextFunct
     })
 })
 
+const updatePost = catchAsync(async(req:Request, res:Response,  next: NextFunction)=>{
+
+    const postId = req.params.postId
+    const authorId = req.user?.id
+    const isAdmin = req.user?.role === "ADMIN"
+    const payload = req.body
+
+   const result = await postService.updatePostFromDb(postId as string, payload, authorId as string, isAdmin)
+    sendResponse(res, {
+        success: true,
+        statusCode: httpStatus.OK,
+        message: "Post Update Successfuuly",
+        data: result
+    })
+
+
+})
+
+
+
 export const postController = {
     createPost,
     getAllPost,
     getPostById,
-    getMyPosts
+    getMyPosts,
+    updatePost
 }

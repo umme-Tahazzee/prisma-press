@@ -1,6 +1,6 @@
 
 import { prisma } from "../../lib/prisma"
-import { IcreatePostPayload } from "./posts.inerface"
+import { IcreatePostPayload, IUpdatePostPayload } from "./posts.inerface"
 
 
 const createPostFromDb = async (payload: IcreatePostPayload, userId: string) => {
@@ -80,9 +80,39 @@ const getMyPostsFromDb = async (authorId: string) => {
 
      return result
 }
+
+const updatePostFromDb = async(postId: string, 
+     payload : IUpdatePostPayload, authorId : string, isAdmin : boolean)=>{
+     const post = await prisma.post.findUniqueOrThrow({
+            where : {
+                id : postId
+            }
+     })
+     
+     if(!isAdmin && post.authorId !== authorId){
+          throw new Error("You are not authorized to update this post")
+     }
+     const result = await prisma.post.update({
+           where : {
+                id : postId
+           },
+           data : payload,
+           include: {
+                 author : {
+                      omit : {
+                          password : true
+                      }
+                 }
+           }
+     })
+     return post
+}
+
+
 export const postService = {
      createPostFromDb,
      getAllPostFromDb,
      getPostByIdFromDb,
-     getMyPostsFromDb
+     getMyPostsFromDb,
+     updatePostFromDb
 }

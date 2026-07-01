@@ -3,10 +3,19 @@ import { PostStatus } from "../../../prisma/generated/prisma/enums"
 type status = 'published'
 
 export interface IcreatePostPayload {
-     title : string
+     title: string
      content: string
-     thumbnail ?: string
-     isFeature : boolean
-     status ?: PostStatus
-     tags : string[]
+     thumbnail?: string
+     isFeature: boolean
+     status?: PostStatus
+     tags: string[]
+}
+
+export interface IUpdatePostPayload {
+     title?: string
+     content?: string
+     thumbnail?: string
+     isFeature?: boolean
+     status?: PostStatus
+     tags?: string[]
 }
