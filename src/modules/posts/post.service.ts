@@ -30,9 +30,17 @@ const getAllPostFromDb = async () => {
 }
 
 const getPostByIdFromDb = async (postId: string) => {
-     const post = await prisma.post.findUnique({
-          where: {
-               id : postId
+     const post = await prisma.post.findUniqueOrThrow({
+          where: { id: postId }
+
+     })
+
+     const updatedPost = await prisma.post.update({
+          where: { id: postId },
+          data: {
+               views: {
+                    increment: 1
+               }
           },
           include: {
                author: {
@@ -41,15 +49,9 @@ const getPostByIdFromDb = async (postId: string) => {
                     }
                },
                comments: true
-          },
+          }
      })
-
-     if(!post){
-           throw new Error("Post not found")
-     }
-
-     return post
-
+     return updatedPost
 }
 
 export const postService = {
