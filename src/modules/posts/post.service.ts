@@ -109,10 +109,30 @@ const updatePostFromDb = async(postId: string,
 }
 
 
+const deletePostFromDb = async (postId: string , authorId : string , isAdmin :boolean) =>{
+     const post = await prisma.post.findUniqueOrThrow({
+            where : {
+                id : postId
+            }
+     })
+      if(!isAdmin && post.authorId !== authorId){
+          throw new Error("You are not authorized to delete this post")
+     }
+
+     const result = await prisma.post.delete({
+            where : {
+                id: postId
+            }
+     })
+
+     return result
+}
+
 export const postService = {
      createPostFromDb,
      getAllPostFromDb,
      getPostByIdFromDb,
      getMyPostsFromDb,
-     updatePostFromDb
+     updatePostFromDb,
+     deletePostFromDb
 }

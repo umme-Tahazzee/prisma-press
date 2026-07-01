@@ -12,5 +12,5 @@ router.get('/', auth(UserRole.ADMIN, UserRole.USER, UserRole.AUTHOR), postContro
 router.get('/my-posts', auth(UserRole.ADMIN, UserRole.USER, UserRole.AUTHOR), postController.getMyPosts)
 router.get('/:postId', postController.getPostById)
 router.patch('/:postId',auth(UserRole.ADMIN, UserRole.USER, UserRole.AUTHOR), postController.updatePost)
-
+router.delete('/:postId',auth(UserRole.ADMIN, UserRole.USER, UserRole.AUTHOR),postController.deletePost)
 export const postRoutes = router
