@@ -1,4 +1,4 @@
-import { includes } from "zod"
+
 import { prisma } from "../../lib/prisma"
 import { IcreatePostPayload } from "./posts.inerface"
 
@@ -24,12 +24,36 @@ const getAllPostFromDb = async () => {
                },
                comments: true
           }
-     } )
+     })
 
      return post
 }
 
+const getPostByIdFromDb = async (postId: string) => {
+     const post = await prisma.post.findUnique({
+          where: {
+               id : postId
+          },
+          include: {
+               author: {
+                    omit: {
+                         password: true
+                    }
+               },
+               comments: true
+          },
+     })
+
+     if(!post){
+           throw new Error("Post not found")
+     }
+
+     return post
+
+}
+
 export const postService = {
      createPostFromDb,
-     getAllPostFromDb
+     getAllPostFromDb,
+     getPostByIdFromDb
 }

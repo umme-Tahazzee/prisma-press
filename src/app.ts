@@ -1,10 +1,11 @@
 import cookieParser from "cookie-parser";
 import express, { Application, Request, Response } from "express";
 import cors from "cors";
-import config from "./config/index.js";
-import { userRoutes } from "./modules/user/user.route.js";
+import config from "./config/index";
+import { userRoutes } from "./modules/user/user.route";
 import { authRoutes } from "./auth/auth.routes.js";
-import { postRoutes } from "./modules/posts/post.route.js";
+import { postRoutes } from "./modules/posts/post.route";
+import { commentRoutes } from "./modules/comments/comment.route";
 
 
 const app: Application = express();
@@ -18,7 +19,7 @@ app.use(
 );
 
 app.use(express.json());
-app.use(express.urlencoded({ extended: true })); // ✅ Fixed
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 app.get("/", async (req: Request, res: Response) => {
@@ -28,10 +29,8 @@ app.get("/", async (req: Request, res: Response) => {
 app.use('/api/users', userRoutes);
 app.use('/api/auth', authRoutes)
 
-//get all post
-app.use('/api/posts', postRoutes)
-
-//posts 
+// post
 app.use('/api/posts',postRoutes)
+
 
 export default app;
