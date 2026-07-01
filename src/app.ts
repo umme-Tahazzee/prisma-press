@@ -28,8 +28,10 @@ app.get("/", async (req: Request, res: Response) => {
 app.use('/api/users', userRoutes);
 app.use('/api/auth', authRoutes)
 
-//posts 
+//get all post
+app.use('/api/posts', postRoutes)
 
+//posts 
 app.use('/api/posts',postRoutes)
 
 export default app;

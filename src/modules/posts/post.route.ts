@@ -8,5 +8,8 @@ const router = Router()
 router.post("/", auth(UserRole.ADMIN, UserRole.USER, UserRole.AUTHOR), 
              postController.createPost)
 
+router.get('/', auth(UserRole.ADMIN, UserRole.USER, UserRole.AUTHOR), postController.getAllPost)
+
+
 
 export const postRoutes = router
