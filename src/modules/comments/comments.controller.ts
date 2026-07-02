@@ -6,16 +6,15 @@ import httpStatus from 'http-status'
 
 
 const createComment = catchAsync(async(req:Request, res:Response)=>{
-      const authorId = req.user?.id
+      const authorId = req.user?.id as string
       const payload = req.body
     
-      
-      const result = await commentService.createComment(authorId as string,payload)
+      const result = await commentService.createComment(authorId ,payload)
 
       sendResponse(res, {
               success : true,
-              statusCode : httpStatus.OK,
-              message : "comment retrive succesfully",
+              statusCode : httpStatus.CREATED,
+               message : "Comment created successfully",
               data : result
       })
 })
@@ -61,7 +60,7 @@ const updateComments = catchAsync(async(req:Request, res:Response) => {
 const deletedComments = catchAsync(async(req:Request, res:Response) => {
        const authorId = req.user?.id as string
        const commentId = req.params.commentId as string
-       const result = await commentService.deleteCommentFromDb( commentId, authorId)
+       await commentService.deleteCommentFromDb( commentId, authorId)
 
        sendResponse(res, {
               success : true,
@@ -74,6 +73,10 @@ const deletedComments = catchAsync(async(req:Request, res:Response) => {
 const moderateComment = catchAsync(async(req:Request, res:Response) => {
 
 })
+
+
+
+
 export const commentController = {
      createComment,
      getAllComments,

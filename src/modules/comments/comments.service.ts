@@ -3,17 +3,22 @@ import { ICreateCommentPayload } from "./comments.interface";
 
 const createComment = async (authorId: string, payload: ICreateCommentPayload) => {
 
-     await prisma.post.findUniqueOrThrow({
+     const post = await prisma.post.findUnique({
           where: {
                id: payload.postId
           }
      })
 
+     if(!post) {
+          throw new Error("Post not found")
+     }
+
 
      const comment = await prisma.comment.create({
-          data: {
-               ...payload,
-               authorId: authorId
+          data: {      
+               content: payload.content,
+               postId: payload.postId,
+               authorId: authorId       
           },
      });
 
@@ -73,7 +78,21 @@ const updateCommentsFromDb = async (commentId: string, authorId: string, data: I
 }
 
 const deleteCommentFromDb = async (commentId: string, authorId : string) => {
-   const result = await prisma.comment.delete({
+   
+      const commentData = await prisma.comment.findUniqueOrThrow({
+           where : {
+               id : commentId,
+               authorId
+           },
+           select : {
+               id : true
+           }
+      })
+
+      if(!commentData ) throw new Error("Your provided input is not valid")
+   
+   
+     const result = await prisma.comment.delete({
       where : {
             id: commentId,
             authorId
