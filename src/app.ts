@@ -32,7 +32,7 @@ app.use('/api/auth', authRoutes)
 // post
 app.use('/api/posts',postRoutes)
 //comment 
-app.use('/api/comment', commentRoutes )
+app.use('/api/comments', commentRoutes )
 
 
 export default app;

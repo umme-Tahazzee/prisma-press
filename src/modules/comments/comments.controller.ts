@@ -1,27 +1,43 @@
-const createComment = () =>{
+import { Request, Response } from "express"
+import { catchAsync } from "../../utils/catchAsync"
+import { commentService } from "./comments.service"
+import { sendResponse } from "../../utils/sendResponse"
+import httpStatus from 'http-status'
+const createComment = catchAsync(async(req:Request, res:Response)=>{
+      const authorId = req.user?.id
+      const payload = req.body
+    
+      
+      const result = await commentService.createComment(authorId as string,payload)
 
-}
+      sendResponse(res, {
+              success : true,
+              statusCode : httpStatus.OK,
+              message : "comment retrive succesfully",
+              data : result
+      })
+})
 
-const getAllComments = () => {
+const getAllComments = catchAsync(async(req:Request, res:Response) => {
      
-}
+})
 
-const getCommentsById = () => {
+const getCommentsById = catchAsync(async(req:Request, res:Response) => {
 
-}
+})
 
-const updateComments = () => {
+const updateComments = catchAsync(async(req:Request, res:Response) => {
 
-}
+})
 
 
-const deletedComments = () => {
+const deletedComments = catchAsync(async(req:Request, res:Response) => {
      
-}
+})
 
-const moderateComment = () => {
+const moderateComment = catchAsync(async(req:Request, res:Response) => {
 
-}
+})
 export const commentController = {
      createComment,
      getAllComments,
