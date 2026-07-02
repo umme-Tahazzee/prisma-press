@@ -3,7 +3,7 @@ import { catchAsync } from "../../utils/catchAsync";
 import { postService } from "./post.service";
 import { sendResponse } from "../../utils/sendResponse";
 import httpStatus from "http-status";
-import { prisma } from "../../lib/prisma";
+
 
 const createPost = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const id = req.user?.id
@@ -95,7 +95,6 @@ const deletePost = catchAsync(async(req:Request, res:Response, next:NextFunction
         data: null
     })
 })
-
 
 export const postController = {
     createPost,

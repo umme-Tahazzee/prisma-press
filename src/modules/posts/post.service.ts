@@ -1,4 +1,5 @@
 
+import { CommentStatus } from "../../../prisma/generated/prisma/enums"
 import { prisma } from "../../lib/prisma"
 import { IcreatePostPayload, IUpdatePostPayload } from "./posts.inerface"
 
@@ -30,28 +31,46 @@ const getAllPostFromDb = async () => {
 }
 
 const getPostByIdFromDb = async (postId: string) => {
-     const post = await prisma.post.findUniqueOrThrow({
-          where: { id: postId }
+     const transactionResult = await prisma.$transaction(async (tx) => {
+    await tx.post.update({
+      where: { id: postId },
+      data: {
+        views: {
+          increment: 1,
+        },
+      },
+    });
+ 
+//     throw new Error(" fake found")
 
-     })
-
-     const updatedPost = await prisma.post.update({
-          where: { id: postId },
-          data: {
-               views: {
-                    increment: 1
-               }
+    const post = await tx.post.findUniqueOrThrow({
+      where: { id: postId },
+      include: {
+        author: {
+          omit: {
+            password: true,
           },
-          include: {
-               author: {
-                    omit: {
-                         password: true
-                    }
-               },
-               comments: true
-          }
-     })
-     return updatedPost
+        },
+        comments: {
+          where: {
+            status: CommentStatus.APPROVED,
+          },
+          orderBy: {
+            createdAt: "desc",
+          },
+        },
+        _count: {
+          select: {
+            comments: true,
+          },
+        },
+      },
+    });
+
+    return post;
+  });
+
+  return transactionResult
 }
 
 const getMyPostsFromDb = async (authorId: string) => {
@@ -105,7 +124,7 @@ const updatePostFromDb = async(postId: string,
                  }
            }
      })
-     return post
+     return result
 }
 
 
