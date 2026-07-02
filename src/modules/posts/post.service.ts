@@ -1,5 +1,5 @@
 
-import { CommentStatus } from "../../../prisma/generated/prisma/enums"
+import { CommentStatus, PostStatus } from "../../../prisma/generated/prisma/enums"
 import { prisma } from "../../lib/prisma"
 import { IcreatePostPayload, IUpdatePostPayload } from "./posts.inerface"
 
@@ -71,6 +71,51 @@ const getPostByIdFromDb = async (postId: string) => {
   });
 
   return transactionResult
+}
+
+const getPostsStats = async() => {
+   const transactionResult = await prisma.$transaction(
+      async(tx)=>{
+           const totalPosts = await tx.post.count()
+           const totalPublishedPost = await tx.post.count({
+               where : {
+                     status : PostStatus.PUBLISHED
+               } 
+           }) 
+           const totalDarftPost = await tx.post.count({
+               where : {
+                     status : PostStatus.DRAFT
+               } 
+           }) 
+           const totalArchivePost = await tx.post.count({
+               where : {
+                     status : PostStatus.ARCHIVE
+               } 
+           }) 
+           const totalComment = await tx.comment.count() 
+
+           const totalApprovedComment = await tx.comment.count({
+                where : {
+                     status : CommentStatus.APPROVED
+                }
+           }) 
+           const totalRejectedComment = await tx.comment.count({
+                where : {
+                     status : CommentStatus.REJECT
+                }
+           }) 
+         
+           return {
+                 totalPosts,
+                 totalPublishedPost,
+                 totalDarftPost,
+                 totalArchivePost,
+                 totalComment,
+                 totalApprovedComment,
+                 totalRejectedComment
+           }
+      }
+   )
 }
 
 const getMyPostsFromDb = async (authorId: string) => {
