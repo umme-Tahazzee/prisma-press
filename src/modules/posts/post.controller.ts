@@ -49,11 +49,11 @@ const getPostById = catchAsync(async (req: Request, res: Response, next: NextFun
 
 })
 
-const getMyPosts = catchAsync(async(req: Request, res: Response, next: NextFunction)=>{
-      const authorId = req.user?.id 
-      const result = await postService.getMyPostsFromDb(authorId as string)
+const getMyPosts = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const authorId = req.user?.id
+    const result = await postService.getMyPostsFromDb(authorId as string)
 
-       sendResponse(res, {
+    sendResponse(res, {
         success: true,
         statusCode: httpStatus.OK,
         message: "Successfully get my all posts",
@@ -61,14 +61,14 @@ const getMyPosts = catchAsync(async(req: Request, res: Response, next: NextFunct
     })
 })
 
-const updatePost = catchAsync(async(req:Request, res:Response,  next: NextFunction)=>{
+const updatePost = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
 
     const postId = req.params.postId
     const authorId = req.user?.id
     const isAdmin = req.user?.role === "ADMIN"
     const payload = req.body
 
-   const result = await postService.updatePostFromDb(postId as string, payload, authorId as string, isAdmin)
+    const result = await postService.updatePostFromDb(postId as string, payload, authorId as string, isAdmin)
     sendResponse(res, {
         success: true,
         statusCode: httpStatus.OK,
@@ -79,16 +79,16 @@ const updatePost = catchAsync(async(req:Request, res:Response,  next: NextFuncti
 
 })
 
-const deletePost = catchAsync(async(req:Request, res:Response, next:NextFunction)=>{
-        
-    const postId = req.params.postId  as string
+const deletePost = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+
+    const postId = req.params.postId as string
     const authorId = req.user?.id as string
     const isAdmin = req.user?.role === 'ADMIN'
 
-    if(!postId) throw new Error("This is not exists ")
+    if (!postId) throw new Error("This is not exists ")
 
-       await postService.deletePostFromDb(postId, authorId, isAdmin)
-        sendResponse(res, {
+    await postService.deletePostFromDb(postId, authorId, isAdmin)
+    sendResponse(res, {
         success: true,
         statusCode: httpStatus.OK,
         message: "Post deleted Successfuuly",
@@ -96,10 +96,22 @@ const deletePost = catchAsync(async(req:Request, res:Response, next:NextFunction
     })
 })
 
+const getPostsStats = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const result = await postService.getPostsStats()
+
+    sendResponse(res, {
+        success: true,
+        statusCode: httpStatus.OK,
+        message: "Post stats retrive Successfuuly",
+        data: result
+    })
+})
+
 export const postController = {
     createPost,
     getAllPost,
     getPostById,
+    getPostsStats,
     getMyPosts,
     updatePost,
     deletePost

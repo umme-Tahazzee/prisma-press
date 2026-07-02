@@ -104,7 +104,16 @@ const getPostsStats = async() => {
                      status : CommentStatus.REJECT
                 }
            }) 
-         
+
+          //  const allPost = await tx.post.findMany()
+          //  let totalPostViews = 0;
+          //  allPost.forEach((post)=>{
+          //     totalPostViews += post.views
+          //  })
+
+          
+
+
            return {
                  totalPosts,
                  totalPublishedPost,
@@ -112,10 +121,12 @@ const getPostsStats = async() => {
                  totalArchivePost,
                  totalComment,
                  totalApprovedComment,
-                 totalRejectedComment
+                 totalRejectedComment,
+                totalPostViews
            }
       }
    )
+   return transactionResult
 }
 
 const getMyPostsFromDb = async (authorId: string) => {
@@ -196,6 +207,7 @@ export const postService = {
      createPostFromDb,
      getAllPostFromDb,
      getPostByIdFromDb,
+      getPostsStats,
      getMyPostsFromDb,
      updatePostFromDb,
      deletePostFromDb
