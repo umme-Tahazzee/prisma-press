@@ -11,6 +11,7 @@ const createPostFromDb = async (
      userId: string,
 ) => {
      const result = await prisma.post.create({
+
           data: {
                ...payload,
                authorId: userId,
@@ -22,6 +23,37 @@ const createPostFromDb = async (
 
 const getAllPostFromDb = async () => {
      const post = await prisma.post.findMany({
+           //filtering and searching
+          // where : {
+             
+          //      AND :[
+          //           {
+          //                OR: [
+          //                      {
+          //                          title: {
+          //                               contains: "ad",
+          //                               mode : "insensitive"
+          //                          }
+          //                      }
+          //                ]
+          //           },
+          //             {
+          //                title: {
+          //                     contains : "admin",
+          //                     mode : "insensitive"
+          //                }
+          //             },
+          //             {
+          //                content : {
+          //                     contains : "ad",
+          //                     mode : "insensitive"
+          //                }
+          //             }
+          //      ]
+          // },
+
+         
+          
           include: {
                author: {
                     omit: {
