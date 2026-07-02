@@ -6,7 +6,27 @@ const getAllComments = () => {
      
 }
 
+const getCommentsById = () => {
+
+}
+
+const updateComments = () => {
+
+}
+
+
+const deletedComments = () => {
+     
+}
+
+const moderateComment = () => {
+
+}
 export const commentController = {
      createComment,
-     getAllComments
+     getAllComments,
+     getCommentsById,
+     updateComments,
+     deletedComments,
+     moderateComment
 }

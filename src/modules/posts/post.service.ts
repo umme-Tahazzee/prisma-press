@@ -1,10 +1,10 @@
-import { promise } from "zod";
+
 import {
      CommentStatus,
      PostStatus,
 } from "../../../prisma/generated/prisma/enums";
-import { prisma } from "../../lib/prisma";
 import { IcreatePostPayload, IUpdatePostPayload } from "./posts.inerface";
+import { prisma } from "../../lib/prisma";
 
 const createPostFromDb = async (
      payload: IcreatePostPayload,
@@ -88,47 +88,18 @@ const getPostsStats = async () => {
                totalComment,
                totalApprovedComment,
                totalRejectedComment,
-               totalPostViews,
+               postViewsAggregate,
           ] = await Promise.all([
-               await tx.post.count(),
-               await tx.post.count({
-                    where: {
-                         status: PostStatus.PUBLISHED,
-                    },
-               }),
-               await tx.post.count({
-                    where: {
-                         status: PostStatus.DRAFT,
-                    },
-               }),
-               await tx.post.count({
-                    where: {
-                         status: PostStatus.ARCHIVE,
-                    },
-               }),
-               await tx.comment.count(),
-               await tx.comment.count({
-                    where: {
-                         status: CommentStatus.APPROVED,
-                    },
-               }),
-               await tx.comment.count({
-                    where: {
-                         status: CommentStatus.REJECT,
-                    },
-               }),
-               await prisma.post.aggregate({
-                    _sum: {
-                         views: true,
-                    },
-               }),
-               await prisma.post.aggregate({
-                    _sum: {
-                         views: true,
-                    },
-               }),
-
+               tx.post.count(),
+               tx.post.count({ where: { status: PostStatus.PUBLISHED } }),
+               tx.post.count({ where: { status: PostStatus.DRAFT } }),
+               tx.post.count({ where: { status: PostStatus.ARCHIVE } }),
+               tx.comment.count(),
+               tx.comment.count({ where: { status: CommentStatus.APPROVED } }),
+               tx.comment.count({ where: { status: CommentStatus.REJECT } }),
+               tx.post.aggregate({ _sum: { views: true } }),
           ]);
+
           return {
                totalPosts,
                totalPublishedPost,
@@ -137,12 +108,12 @@ const getPostsStats = async () => {
                totalComment,
                totalApprovedComment,
                totalRejectedComment,
-               totalPostViews : totalPostViews._sum.views
-          }
+               totalPostViews: postViewsAggregate._sum.views,
+          };
      });
+
      return transactionResult;
 };
-
 const getMyPostsFromDb = async (authorId: string) => {
      const result = await prisma.post.findMany({
           where: {

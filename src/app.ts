@@ -31,6 +31,8 @@ app.use('/api/auth', authRoutes)
 
 // post
 app.use('/api/posts',postRoutes)
+//comment 
+app.use('/api/comment', commentRoutes )
 
 
 export default app;
