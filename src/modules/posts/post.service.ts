@@ -32,101 +32,107 @@ const getAllPostFromDb = async () => {
 
 const getPostByIdFromDb = async (postId: string) => {
      const transactionResult = await prisma.$transaction(async (tx) => {
-    await tx.post.update({
-      where: { id: postId },
-      data: {
-        views: {
-          increment: 1,
-        },
-      },
-    });
- 
-//     throw new Error(" fake found")
+          await tx.post.update({
+               where: { id: postId },
+               data: {
+                    views: {
+                         increment: 1,
+                    },
+               },
+          });
 
-    const post = await tx.post.findUniqueOrThrow({
-      where: { id: postId },
-      include: {
-        author: {
-          omit: {
-            password: true,
-          },
-        },
-        comments: {
-          where: {
-            status: CommentStatus.APPROVED,
-          },
-          orderBy: {
-            createdAt: "desc",
-          },
-        },
-        _count: {
-          select: {
-            comments: true,
-          },
-        },
-      },
-    });
+          //     throw new Error(" fake found")
 
-    return post;
-  });
+          const post = await tx.post.findUniqueOrThrow({
+               where: { id: postId },
+               include: {
+                    author: {
+                         omit: {
+                              password: true,
+                         },
+                    },
+                    comments: {
+                         where: {
+                              status: CommentStatus.APPROVED,
+                         },
+                         orderBy: {
+                              createdAt: "desc",
+                         },
+                    },
+                    _count: {
+                         select: {
+                              comments: true,
+                         },
+                    },
+               },
+          });
 
-  return transactionResult
+          return post;
+     });
+
+     return transactionResult
 }
 
-const getPostsStats = async() => {
-   const transactionResult = await prisma.$transaction(
-      async(tx)=>{
-           const totalPosts = await tx.post.count()
-           const totalPublishedPost = await tx.post.count({
-               where : {
-                     status : PostStatus.PUBLISHED
-               } 
-           }) 
-           const totalDarftPost = await tx.post.count({
-               where : {
-                     status : PostStatus.DRAFT
-               } 
-           }) 
-           const totalArchivePost = await tx.post.count({
-               where : {
-                     status : PostStatus.ARCHIVE
-               } 
-           }) 
-           const totalComment = await tx.comment.count() 
+const getPostsStats = async () => {
+     const transactionResult = await prisma.$transaction(
+          async (tx) => {
+               const totalPosts = await tx.post.count()
+               const totalPublishedPost = await tx.post.count({
+                    where: {
+                         status: PostStatus.PUBLISHED
+                    }
+               })
+               const totalDarftPost = await tx.post.count({
+                    where: {
+                         status: PostStatus.DRAFT
+                    }
+               })
+               const totalArchivePost = await tx.post.count({
+                    where: {
+                         status: PostStatus.ARCHIVE
+                    }
+               })
+               const totalComment = await tx.comment.count()
 
-           const totalApprovedComment = await tx.comment.count({
-                where : {
-                     status : CommentStatus.APPROVED
-                }
-           }) 
-           const totalRejectedComment = await tx.comment.count({
-                where : {
-                     status : CommentStatus.REJECT
-                }
-           }) 
+               const totalApprovedComment = await tx.comment.count({
+                    where: {
+                         status: CommentStatus.APPROVED
+                    }
+               })
+               const totalRejectedComment = await tx.comment.count({
+                    where: {
+                         status: CommentStatus.REJECT
+                    }
+               })
 
-          //  const allPost = await tx.post.findMany()
-          //  let totalPostViews = 0;
-          //  allPost.forEach((post)=>{
-          //     totalPostViews += post.views
-          //  })
+               //  const allPost = await tx.post.findMany()
+               //  let totalPostViews = 0;
+               //  allPost.forEach((post)=>{
+               //     totalPostViews += post.views
+               //  })
 
-          
+               const totalPostViewsAgregate = await prisma.post.aggregate({
+                    _sum: {
+                         views: true
+                    }
 
+               })
 
-           return {
-                 totalPosts,
-                 totalPublishedPost,
-                 totalDarftPost,
-                 totalArchivePost,
-                 totalComment,
-                 totalApprovedComment,
-                 totalRejectedComment,
-                totalPostViews
-           }
-      }
-   )
-   return transactionResult
+               const totalPostViews = totalPostViewsAgregate._sum.views
+
+               return {
+                    totalPosts,
+                    totalPublishedPost,
+                    totalDarftPost,
+                    totalArchivePost,
+                    totalComment,
+                    totalApprovedComment,
+                    totalRejectedComment,
+                    totalPostViews
+               }
+          }
+     )
+     return transactionResult
 }
 
 const getMyPostsFromDb = async (authorId: string) => {
@@ -156,48 +162,48 @@ const getMyPostsFromDb = async (authorId: string) => {
      return result
 }
 
-const updatePostFromDb = async(postId: string, 
-     payload : IUpdatePostPayload, authorId : string, isAdmin : boolean)=>{
+const updatePostFromDb = async (postId: string,
+     payload: IUpdatePostPayload, authorId: string, isAdmin: boolean) => {
      const post = await prisma.post.findUniqueOrThrow({
-            where : {
-                id : postId
-            }
+          where: {
+               id: postId
+          }
      })
-     
-     if(!isAdmin && post.authorId !== authorId){
+
+     if (!isAdmin && post.authorId !== authorId) {
           throw new Error("You are not authorized to update this post")
      }
      const result = await prisma.post.update({
-           where : {
-                id : postId
-           },
-           data : payload,
-           include: {
-                 author : {
-                      omit : {
-                          password : true
-                      }
-                 }
-           }
+          where: {
+               id: postId
+          },
+          data: payload,
+          include: {
+               author: {
+                    omit: {
+                         password: true
+                    }
+               }
+          }
      })
      return result
 }
 
 
-const deletePostFromDb = async (postId: string , authorId : string , isAdmin :boolean) =>{
+const deletePostFromDb = async (postId: string, authorId: string, isAdmin: boolean) => {
      const post = await prisma.post.findUniqueOrThrow({
-            where : {
-                id : postId
-            }
+          where: {
+               id: postId
+          }
      })
-      if(!isAdmin && post.authorId !== authorId){
+     if (!isAdmin && post.authorId !== authorId) {
           throw new Error("You are not authorized to delete this post")
      }
 
      const result = await prisma.post.delete({
-            where : {
-                id: postId
-            }
+          where: {
+               id: postId
+          }
      })
 
      return result
@@ -207,7 +213,7 @@ export const postService = {
      createPostFromDb,
      getAllPostFromDb,
      getPostByIdFromDb,
-      getPostsStats,
+     getPostsStats,
      getMyPostsFromDb,
      updatePostFromDb,
      deletePostFromDb
