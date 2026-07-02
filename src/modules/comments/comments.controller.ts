@@ -3,6 +3,8 @@ import { catchAsync } from "../../utils/catchAsync"
 import { commentService } from "./comments.service"
 import { sendResponse } from "../../utils/sendResponse"
 import httpStatus from 'http-status'
+
+
 const createComment = catchAsync(async(req:Request, res:Response)=>{
       const authorId = req.user?.id
       const payload = req.body
@@ -57,7 +59,16 @@ const updateComments = catchAsync(async(req:Request, res:Response) => {
 
 
 const deletedComments = catchAsync(async(req:Request, res:Response) => {
-     
+       const authorId = req.user?.id as string
+       const commentId = req.params.commentId as string
+       const result = await commentService.deleteCommentFromDb( commentId, authorId)
+
+       sendResponse(res, {
+              success : true,
+              statusCode : httpStatus.OK,
+              message : `delete  comments successfully`,
+              data : null
+      })
 })
 
 const moderateComment = catchAsync(async(req:Request, res:Response) => {

@@ -72,11 +72,22 @@ const updateCommentsFromDb = async (commentId: string, authorId: string, data: I
 
 }
 
+const deleteCommentFromDb = async (commentId: string, authorId : string) => {
+   const result = await prisma.comment.delete({
+      where : {
+            id: commentId,
+            authorId
+      }
+   })
 
+   return result
+}
+ 
 
 export const commentService = {
      createComment,
      getAllCommentFromDb,
      getAllCommentFromByDb,
-     updateCommentsFromDb
+     updateCommentsFromDb,
+     deleteCommentFromDb
 }
