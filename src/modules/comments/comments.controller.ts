@@ -1,9 +1,8 @@
-import { Request, Response } from "express"
+import { Request, Response, urlencoded } from "express"
 import { catchAsync } from "../../utils/catchAsync"
 import { commentService } from "./comments.service"
 import { sendResponse } from "../../utils/sendResponse"
 import httpStatus from 'http-status'
-
 
 const createComment = catchAsync(async(req:Request, res:Response)=>{
       const authorId = req.user?.id as string
@@ -30,10 +29,10 @@ const getAllComments = catchAsync(async(req:Request, res:Response) => {
       })
 })
 
-const getCommentsById = catchAsync(async(req:Request, res:Response) => {
+const getCommentsByAuthor = catchAsync(async(req:Request, res:Response) => {
      const authorId = req.params.authorId as string
 
-     const result = await commentService.getAllCommentFromByDb(authorId)
+     const result = await commentService.getCommentsByAuthorFromDb(authorId)
      sendResponse(res, {
               success : true,
               statusCode : httpStatus.OK,
@@ -56,7 +55,6 @@ const updateComments = catchAsync(async(req:Request, res:Response) => {
     
 })
 
-
 const deletedComments = catchAsync(async(req:Request, res:Response) => {
        const authorId = req.user?.id as string
        const commentId = req.params.commentId as string
@@ -71,16 +69,24 @@ const deletedComments = catchAsync(async(req:Request, res:Response) => {
 })
 
 const moderateComment = catchAsync(async(req:Request, res:Response) => {
+     const commentId = req.params.commentId as string
+     const data = req.body 
+     const result = await commentService.moderateCommentByDb(commentId, data)
+
+     sendResponse(res, {
+              success : true,
+              statusCode : httpStatus.OK,
+              message : `update comments successfully`,
+              data : result
+      })
+
 
 })
-
-
-
 
 export const commentController = {
      createComment,
      getAllComments,
-     getCommentsById,
+     getCommentsByAuthor,
      updateComments,
      deletedComments,
      moderateComment

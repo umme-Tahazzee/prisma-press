@@ -8,7 +8,7 @@ const router = Router()
 
 router.post('/',auth(UserRole.ADMIN, UserRole.USER, UserRole.AUTHOR), commentController.createComment)
 router.get('/',  commentController.getAllComments)
-router.get('/author/:authorId', commentController.getCommentsById)
+router.get('/author/:authorId', commentController.getCommentsByAuthor)
 router.patch('/:commentId',auth(UserRole.ADMIN, UserRole.USER, UserRole.AUTHOR),  commentController.updateComments)
 router.delete('/:commentId', auth(UserRole.ADMIN, UserRole.USER, UserRole.AUTHOR), commentController.deletedComments)
 router.put('/:commentId/moderate', auth(UserRole.ADMIN), commentController.moderateComment)
