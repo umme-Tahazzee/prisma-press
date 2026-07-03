@@ -37,10 +37,10 @@ const loginUser = catchAsync(async(req:Request, res:Response, next:NextFunction)
 
 const refreshToken = catchAsync(async(req:Request, res:Response, next:NextFunction) =>{
   const refreshToken = req.cookies.refreshToken
-  console.log('refresh-token', refreshToken);
+  
   
   const {accessToken} = await authService.refreshToken(refreshToken)
-   console.log(accessToken);
+
    
    res.cookie("accessToken", accessToken, {
          httpOnly: true,

@@ -33,7 +33,7 @@ const getAllPostFromDb = async (query: IPostQuery) => {
     const tags = query.tags? JSON.parse(query.tags as string) : null
     const tagsArray = Array.isArray(tags) ? tags : []
      
-     console.log(tagsArray);
+   
      
      const andConditions : PostWhereInput[] = []
 

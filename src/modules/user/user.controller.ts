@@ -24,7 +24,6 @@ const registerUser = catchAsync(async (req: Request, res: Response) => {
 
 const getMyProfile = catchAsync(async (req: Request, res: Response) => {
 
-  console.log(req.user, 'check user');
   const profile = await useService.getProfileFromDb(req.user?.id as string)
   sendResponse(res, {
     success: true,
