@@ -33,7 +33,9 @@ app.use('/api/comments', commentRoutes )
 
 app.use((req: Request, res: Response)=>{
      res.status(404).json({
-         message : "Route not found"
+         message : "Route not found",
+         req: req.originalUrl,
+         date : Date()
      })
 })
 
