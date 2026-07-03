@@ -28,11 +28,14 @@ app.get("/", async (req: Request, res: Response) => {
 
 app.use('/api/users', userRoutes);
 app.use('/api/auth', authRoutes)
-
-// post
 app.use('/api/posts',postRoutes)
-//comment 
 app.use('/api/comments', commentRoutes )
+
+app.use((req: Request, res: Response)=>{
+     res.status(404).json({
+         message : "Route not found"
+     })
+})
 
 
 export default app;

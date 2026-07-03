@@ -29,11 +29,8 @@ const getAllPostFromDb = async (query: IPostQuery) => {
      const sortBy = query.sortBy ? query.sortBy : "createAt"
      const sortOrder = query.sortOrder ? query.sortOrder : 'desc'
 
-
-    const tags = query.tags? JSON.parse(query.tags as string) : null
-    const tagsArray = Array.isArray(tags) ? tags : []
-     
-   
+      const tags = query.tags? JSON.parse(query.tags as string) : null
+      const tagsArray = Array.isArray(tags) ? tags : []
      
      const andConditions : PostWhereInput[] = []
 
