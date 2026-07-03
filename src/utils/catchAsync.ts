@@ -9,12 +9,7 @@ export const catchAsync = (fn: RequestHandler) => {
     try {
       await fn(req, res, next);
     } catch (error) {
-      res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
-        success: false,
-        StatusCodes: httpStatus.INTERNAL_SERVER_ERROR,
-        message: "Failed to register",
-        error: (error as Error).message,
-      });
+       next(error)
     }
   };
 };

@@ -1,11 +1,14 @@
 import cookieParser from "cookie-parser";
-import express, { Application, Request, Response } from "express";
+import express, { Application, NextFunction, Request, Response } from "express";
 import cors from "cors";
 import config from "./config/index";
 import { userRoutes } from "./modules/user/user.route";
 import { authRoutes } from "./auth/auth.routes.js";
 import { postRoutes } from "./modules/posts/post.route";
 import { commentRoutes } from "./modules/comments/comment.route";
+import { notFound } from "./middleware/not-found";
+import  httpStatus  from "http-status";
+
 
 
 const app: Application = express();
@@ -31,13 +34,15 @@ app.use('/api/auth', authRoutes)
 app.use('/api/posts',postRoutes)
 app.use('/api/comments', commentRoutes )
 
-app.use((req: Request, res: Response)=>{
-     res.status(404).json({
-         message : "Route not found",
-         req: req.originalUrl,
-         date : Date()
-     })
+app.use(notFound)
+app.use((err: any, req: Request, res: Response, next: NextFunction)=>{
+       res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+        success: false,
+        StatusCodes: httpStatus.INTERNAL_SERVER_ERROR,
+        message: err.message,
+        error : err
+       
+      });
 })
-
 
 export default app;
