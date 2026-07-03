@@ -3,7 +3,7 @@ import {
      CommentStatus,
      PostStatus,
 } from "../../../prisma/generated/prisma/enums";
-import { IcreatePostPayload, IUpdatePostPayload } from "./posts.inerface";
+import { IcreatePostPayload, IPostQuery, IUpdatePostPayload } from "./posts.inerface";
 import { prisma } from "../../lib/prisma";
 
 const createPostFromDb = async (
@@ -21,50 +21,34 @@ const createPostFromDb = async (
      return result;
 };
 
-const getAllPostFromDb = async () => {
+const getAllPostFromDb = async (query: IPostQuery) => {
+ 
+ 
      const post = await prisma.post.findMany({
-           //filtering and searching
-          // where : {
-             
-          //      AND :[
-          //           {
-          //                OR: [
-          //                      {
-          //                          title: {
-          //                               contains: "ad",
-          //                               mode : "insensitive"
-          //                          }
-          //                      }
-          //                ]
-          //           },
-          //             {
-          //                title: {
-          //                     contains : "admin",
-          //                     mode : "insensitive"
-          //                }
-          //             },
-          //             {
-          //                content : {
-          //                     contains : "ad",
-          //                     mode : "insensitive"
-          //                }
-          //             }
-          //      ]
-          // },
+        where: {
+            AND: [
+                query.searchTerm ? {
+                    OR: [
+                        { title: { contains: query.searchTerm, mode: "insensitive" } },
+                        { content: { contains: query.searchTerm, mode: "insensitive" } },
+                    ]
+                } : {},
+                query.title ? { title: query.title } : {},
+                query.content ? { content: query.content } : {},
+            ]
+        },
+        take : query.limit? Number(query.limit):10,
+        include: {
+            author: {
+                omit: {
+                    password: true,
+                },
+            },
+            comments: true,
+        },
+    });
 
-         
-          
-          include: {
-               author: {
-                    omit: {
-                         password: true,
-                    },
-               },
-               comments: true,
-          },
-     });
-
-     return post;
+    return post;
 };
 
 const getPostByIdFromDb = async (postId: string) => {
@@ -146,6 +130,7 @@ const getPostsStats = async () => {
 
      return transactionResult;
 };
+
 const getMyPostsFromDb = async (authorId: string) => {
      const result = await prisma.post.findMany({
           where: {
