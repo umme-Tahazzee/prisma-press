@@ -8,6 +8,7 @@ import { postRoutes } from "./modules/posts/post.route";
 import { commentRoutes } from "./modules/comments/comment.route";
 import { notFound } from "./middleware/not-found";
 import { globalError } from "./middleware/globalError";
+import { subscriptionRoutes } from "./modules/subscription/subsription.interface";
 
 
 
@@ -34,8 +35,10 @@ app.use('/api/users', userRoutes);
 app.use('/api/auth', authRoutes)
 app.use('/api/posts',postRoutes)
 app.use('/api/comments', commentRoutes )
+app.use('/api/subcription', subscriptionRoutes)
+
+
 
 app.use(notFound)
 app.use(globalError)
-
 export default app;
