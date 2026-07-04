@@ -58,7 +58,7 @@ const refreshToken = async (refreshToken : string) => {
      const user = await prisma.user.findFirstOrThrow({
        where : {id}
      })
-     if(user.active_status === 'BLOCKED'){
+     if(user.activeStatus === 'BLOCKED'){
         throw new Error('user is bloocked')
      }
 

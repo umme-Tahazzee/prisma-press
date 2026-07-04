@@ -2,9 +2,6 @@ import { prisma } from "../../lib/prisma.js"
 import bcrypt from "bcryptjs";
 import config from "../../config/index.js";
 import type {RegisterInterfacePayload} from '../user/user.interface.js'
-import { JwtPayload } from "jsonwebtoken";
-
-
 
 
 const registerUserIntoDb = async(payload: RegisterInterfacePayload) => {

@@ -136,7 +136,7 @@ const getPostByIdFromDb = async (postId: string) => {
                               status: CommentStatus.APPROVED,
                          },
                          orderBy: {
-                              createdAt: "desc",
+                             createdAt : "desc"
                          },
                     },
                     _count: {
@@ -168,10 +168,10 @@ const getPostsStats = async () => {
                tx.post.count(),
                tx.post.count({ where: { status: PostStatus.PUBLISHED } }),
                tx.post.count({ where: { status: PostStatus.DRAFT } }),
-               tx.post.count({ where: { status: PostStatus.ARCHIVE } }),
+               tx.post.count({ where: { status: PostStatus.ARCHIVED } }),
                tx.comment.count(),
                tx.comment.count({ where: { status: CommentStatus.APPROVED } }),
-               tx.comment.count({ where: { status: CommentStatus.REJECT } }),
+               tx.comment.count({ where: { status: CommentStatus.REJECTED } }),
                tx.post.aggregate({ _sum: { views: true } }),
           ]);
 

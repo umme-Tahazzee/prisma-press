@@ -1,10 +1,11 @@
 import { NextFunction, Request, Response } from "express";
-import { UserRole } from "../../generated/prisma/enums.js";
+
 import { catchAsync } from "../utils/catchAsync.js";
 import { jwtUtils } from "../utils/jwt.js";
 import config from "../config/index.js";
 import { JwtPayload } from "jsonwebtoken";
 import { prisma } from "../lib/prisma.js";
+import { UserRole } from "../../prisma/generated/prisma/enums.js";
 
 
 declare global {
@@ -58,10 +59,7 @@ export const auth = (...requireRole: UserRole[]) => {
       throw new Error("user not found");
     }
 
-    if (user.active_status === "BLOCKED") {
-      throw new Error("Your account has been blocked");
-    }
-
+    
     req.user = {
       id,
       email,

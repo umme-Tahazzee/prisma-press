@@ -8,7 +8,8 @@ import { postRoutes } from "./modules/posts/post.route";
 import { commentRoutes } from "./modules/comments/comment.route";
 import { notFound } from "./middleware/not-found";
 import { globalError } from "./middleware/globalError";
-import { subscriptionRoutes } from "./modules/subscription/subsription.interface";
+import { subscriptionRoutes } from "./modules/subscription/subscription.route";
+
 
 
 
